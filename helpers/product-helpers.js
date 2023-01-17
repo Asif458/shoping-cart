@@ -1,4 +1,6 @@
 var db=require('../config/connection')
+var collection=require('../config/collections');
+const { Collection } = require('mongodb');
 module.exports = {
     addProduct:(product,callback)=>{
         console.log(product);
@@ -7,5 +9,13 @@ module.exports = {
             callback(data.insertedId)
         })
         
+    },
+    getAllProducts:()=>{
+        return new Promise( async(resolve,reject)=>{
+            let products=await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+            resolve(products)
+
+        })
+       
     }
 }
