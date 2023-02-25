@@ -5,20 +5,31 @@ const ObjectId  = require('mongodb').ObjectId;
 
 
 module.exports={
+    // doSignup:(userData)=>{
+    //     return new Promise(async(resolve,_reject)=>{
+    
+    //         const salt = await  bcrypt.genSalt(10);
+    //         userData.Password= bcrypt.hash(userData.Password,salt,(_err,_hash) => {})
+    //         db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((data)=>{
+    //             resolve(data)
+    
+    //         })
+    
+    
+    
+    //     })
+
+    // },
+
     doSignup:(userData)=>{
-    return new Promise(async(resolve,_reject)=>{
-
-        const salt = await  bcrypt.genSalt(10);
-        userData.Password= bcrypt.hash(userData.Password,salt,(_err,_hash) => {})
-        db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((data)=>{
-            resolve(data)
-
+        return new Promise(async(resolve,reject)=>{
+            userData.Password=await bcrypt.hash(userData.Password,10)
+            db.get().collection(collection.USER_COLLECTION).insertOne(userData).then()
+            resolve(userData)
+            
         })
-       
+    },
 
-
-    })
-},
     doLogin:(userData)=>{
         return new Promise(async (resolve,reject)=>{
             let loginStatus=false
@@ -28,13 +39,19 @@ module.exports={
                 bcrypt.compare(userData.Password,user.Password).then((status)=>{
                     if(status){
                         console.log("loginSuccessfull");
+                        response.user=user
+                        response.status=true
+                        resolve(response)
+
                     }else{
                         console.log("login failed");
+                        resolve({status:false})
                     }
                     
                 })
             }else{
                 console.log('login failed');
+                resolve({status:false})
             }
         })
     }
