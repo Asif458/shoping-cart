@@ -21,9 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
+app.use(session({secret:"key",cookie:{maxAge:600000}}))
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
-app.use(session({secret:"key",cookie:{maxAge:600000}})) 
+
+// app.use(express.cookieParser);
+// app.use(express.session({ secret:"keyboard cat"}));
+ 
 db.connect((err)=>{
   if(err) console.log("connection error");
   else console.log("database connected to port");
@@ -43,5 +47,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
