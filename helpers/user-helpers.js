@@ -54,6 +54,23 @@ module.exports={
                 resolve({status:false})
             }
         })
+    },
+    addToCart:(proId,userId)=>{
+        return new Promise(async (resolve,reject)=>{
+            let userCart=await db.get().collection(collection.CART_COLLECTION).findone({user:ObjectId(userId)})
+            if(userCart){
+
+            }else{
+                let cartObj={
+                    user:ObjectId(userId),
+                    products:[objectId(proId)]
+                }
+                db.get().collection(collcetion.CART_COLLECTION).insertOne(cartObj).then((response)=>{
+                    resolve()
+                })
+            }
+            
+        })
     }
 
 }
